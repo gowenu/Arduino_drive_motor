@@ -12,20 +12,20 @@ const int dirPin = 2;
 const int stepPin = 3;
 const int enablePin = 7;
 const int optoPin = 9;
-int pos = 1600;
+int pos = 800;
 
 // Create a new instance of the AccelStepper class:
 AccelStepper stepper(AccelStepper::DRIVER, stepPin, dirPin);
 
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(960000);
   pinMode(optoPin,INPUT);
   // Set the maximum speed and acceleration:
-  stepper.setMaxSpeed(500);
+  stepper.setMaxSpeed(1000);
   stepper.setEnablePin(enablePin);
   stepper.setPinsInverted(true,false,false); //positive position upward movement.
-  stepper.setAcceleration(200);
+  stepper.setAcceleration(500);
   stepper.moveTo(pos);
 }
 
