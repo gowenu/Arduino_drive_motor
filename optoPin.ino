@@ -5,6 +5,7 @@
 //TODO
 //1.update status only when changed
 //2.update positional status
+//3.receive positional command
 
 // Define stepper motor connections and motor interface type. Motor interface type must be set to 1 when using a driver:
 const int dirPin = 2;
