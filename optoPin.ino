@@ -24,21 +24,23 @@ void setup() {
   // Set the maximum speed and acceleration:
   stepper.setMaxSpeed(500);
   stepper.setEnablePin(enablePin);
-  stepper.setPinsInverted(true,false,false);
+  stepper.setPinsInverted(true,false,false); //positive position upward movement.
   stepper.setAcceleration(200);
+  stepper.moveTo(pos);
 }
 
 void loop() {
-
+  
   if (digitalRead(optoPin) == HIGH) {
     Serial.println("ON");
     if (pos > 0) {
       stepper.stop();
+      Serial.println("STOP");
     } else{
-      stepper.runToNewPosition(pos);
+      stepper.run();
     }
   } else{
     Serial.println("OFF");
-    stepper.runToNewPosition(pos);
+    stepper.run();
   }
 }
