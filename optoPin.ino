@@ -12,7 +12,7 @@ const int dirPin = 2;
 const int stepPin = 3;
 const int enablePin = 7;
 const int optoPin = 9;
-int pos = 800;
+int pos = 1600;
 
 // Create a new instance of the AccelStepper class:
 AccelStepper stepper(AccelStepper::DRIVER, stepPin, dirPin);
