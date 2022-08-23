@@ -8,12 +8,14 @@
 //3.update distanceToGo()
 //4.receive positional command
 
+
 // Define stepper motor connections and motor interface type. Motor interface type must be set to 1 when using a driver:
 const int dirPin = 2;
 const int stepPin = 3;
 const int enablePin = 7;
 const int optoPin = 9;
 boolean didCalibration = false;
+long lastposition = 0;
 const int microStep = 400;
 int reachLimit = microStep * 25;
 
@@ -29,35 +31,43 @@ void setup() {
   stepper.setAcceleration(microStep);
   stepper.setEnablePin(enablePin);
   stepper.setPinsInverted(true,false,false); //positive position upward movement.
-  stepper.moveTo(reachLimit);
 }
 
 void loop() {
-  // Find AbsoluteZero position
-  if (didCalibration == false)
-    {
-    stepper.run();
-    if (digitalRead(optoPin) == HIGH) 
-      {
-      stepper.stop();
-      Serial.println("ON");
-      stepper.setCurrentPosition(0);
-      didCalibration = true;
-      Serial.println("Calibration Succeed");
-      } 
-    else{
-      Serial.println("Reaching Limit");
-      }
+  // Calibration before operation
+  if (didCalibration == false){  
+    calibration();
     }
   else{
     operation();
     }
   }
 
-  void operation() {
-    //regular operation
-    stepper.setMaxSpeed(microStep * 4);
-    stepper.setAcceleration(microStep * 2);
-    stepper.runToNewPosition(-microStep * 4);
+void calibration(){
+
+  if (digitalRead(optoPin) == HIGH) 
+    {
+    stepper.setCurrentPosition(0);
+    stepper.stop();
+    didCalibration = true;
+    Serial.println("Calibration Succeed: setup Zero position");
+    } 
+  else{
+    stepper.moveTo(reachLimit);
+    stepper.run();
+    Serial.println("Reaching Limit");
+    }
+  }
+
+void operation(){
+  stepper.setMaxSpeed(microStep * 4);
+  stepper.setAcceleration(microStep * 2);
+  stepper.moveTo(-microStep * 1);
+  stepper.run();
+  // Update position if stepped
+  if (stepper.currentPosition() != lastposition) {
+    Serial.print("Current position: ");
     Serial.println(stepper.currentPosition());
   }
+  lastposition = stepper.currentPosition();
+}
