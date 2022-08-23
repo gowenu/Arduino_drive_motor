@@ -24,7 +24,7 @@ AccelStepper stepper(AccelStepper::DRIVER, stepPin, dirPin);
 
 
 void setup() {
-  Serial.begin(2000000);
+  Serial.begin(1000000);
   pinMode(optoPin,INPUT);
   // Set the maximum speed and acceleration:
   stepper.setMaxSpeed(microStep);
@@ -43,6 +43,8 @@ void loop() {
     // Call motion function until reach target position.
     while (target != stepper.currentPosition()){
       operation();
+      Serial.print("Current position: ");
+      Serial.println(stepper.currentPosition());
     }
   }
 }
@@ -65,14 +67,7 @@ void calibration(){
 void operation(){
   stepper.setMaxSpeed(microStep * 15);
   stepper.setAcceleration(microStep * 15);
-  stepper.moveTo(target);
-  stepper.run();
-  // Update position if stepped
-  if (stepper.currentPosition() != lastposition) {
-    Serial.print("Current position: ");
-    Serial.println(stepper.currentPosition());
-  }
-  lastposition = stepper.currentPosition();
+  stepper.runToNewPosition(target);
 }
 
 void receive_command(){
